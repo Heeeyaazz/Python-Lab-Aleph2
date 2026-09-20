@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>골드 등급 전용 페이지</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col">
+
+  {% include 'partials/_nav.html' %}
+
+  <main class="max-w-3xl mx-auto px-4 py-10 flex-1 w-full">
+    <div id="gold-content">
+      <div class="text-center text-gray-400 py-20">불러오는 중…</div>
+    </div>
+  </main>
+
+  <script>
+    function renderException(title, message) {
+      document.getElementById('gold-content').innerHTML = `
+        <div class="bg-white border border-red-100 rounded-2xl shadow-sm p-10 text-center">
+          <div class="text-5xl mb-4">🚫</div>
+          <h2 class="text-xl font-bold text-red-600 mb-2">${title}</h2>
+          <p class="text-sm text-gray-500">${message}</p>
+          <a href="/" class="inline-block mt-6 text-sm text-indigo-600 hover:underline">게시판으로 돌아가기</a>
+        </div>`;
+    }
+
+    function renderGold(data) {
+      document.getElementById('gold-content').innerHTML = `
+        <div class="bg-white rounded-2xl shadow-sm p-10">
+          <div class="text-4xl mb-3">🥇</div>
+          <h2 class="text-xl font-bold text-amber-600 mb-2">골드 등급 전용 공간</h2>
+          <p class="text-sm text-gray-600 mb-4">${data.msg}</p>
+          <p class="text-xs text-gray-400">접속 계정: <strong>${data.username}</strong> (${data.role_name}, role=${data.role})</p>
+        </div>`;
+    }
+
+    async function loadGoldPage() {
+      const token = AppAuth.getToken();
+      if (!token) {
+        renderException('로그인이 필요합니다', '골드 등급 전용 페이지입니다. 먼저 로그인해주세요.');
+        return;
+      }
+      const res = await fetch('/api/gold/info', { headers: { Authorization: `Bearer ${token}` } });
+      if (res.status === 403) {
+        renderException('접근 권한이 없습니다', '골드 등급 또는 관리자만 접근할 수 있는 페이지입니다. (현재 계정은 일반 등급)');
+        return;
+      }
+      if (res.status === 401) {
+        renderException('로그인이 필요합니다', '로그인 정보가 만료되었습니다. 다시 로그인해주세요.');
+        return;
+      }
+      if (!res.ok) {
+        renderException('오류가 발생했습니다', '잠시 후 다시 시도해주세요.');
+        return;
+      }
+      renderGold(await res.json());
+    }
+
+    document.addEventListener('DOMContentLoaded', loadGoldPage);
+    document.addEventListener('authchange', loadGoldPage);
+  </script>
+</body>
+</html>
