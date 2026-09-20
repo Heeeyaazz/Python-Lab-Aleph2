@@ -1,0 +1,25 @@
+{
+  "weight_loss_kg": 40,
+  "program_start_date": "2026-08-11",
+  "grandmother_passing_date": "2026-06-05",
+  "months_between_loss_and_start": 2.2,
+  "ritual_days_recorded": 23,
+  "ritual_days_practiced": 22,
+  "first_arrival_days": 16,
+  "ritual_calendar_span_days": 32,
+  "data_from": "2026-08-11",
+  "data_to": "2026-09-11",
+  "peer_mention_count": 160,
+  "unique_peers_who_commented": 4,
+  "peer_mention_by_ability": {
+    "대인관계력": 61,
+    "자기조절력": 33
+  },
+  "submission_count": 5,
+  "attendance_training_days": 23,
+  "attendance_present_days": 22,
+  "attendance_absent_days": 0,
+  "attendance_rate_pct": 95.7,
+  "attendance_range": "2026-08-11 ~ 2026-09-11",
+  "is_partial_data": true
+}
